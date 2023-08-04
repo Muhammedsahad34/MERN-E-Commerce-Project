@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const collection = require('../Collections')
 const ProductSchema = new mongoose.Schema({
     name:{
         type:String,
@@ -14,8 +15,12 @@ const ProductSchema = new mongoose.Schema({
     },
     description:{
         type:String
+    },
+    image:{
+        type:String,
+        required:true
     }
     
 });
-const ProductModel = mongoose.model("products",ProductSchema);
+const ProductModel = mongoose.model(collection.PRODUCT_COLLECTION,ProductSchema);
 module.exports = ProductModel;
