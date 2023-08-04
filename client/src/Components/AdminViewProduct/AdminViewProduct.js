@@ -1,8 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { baseUrl } from '../../URL';
 
 function AdminViewProduct() {
     const navigate = useNavigate();
+    const [product, setProduct] = useState([]);
+    useEffect(()=>{
+        axios.get(`${baseUrl}/getProduct`).then((response)=>{
+            // console.log(response.data)
+            setProduct(response.data)
+        }).catch((error)=>{console.log(error)})
+
+    })
     return (
         <div className='container-fluid'>
             <div className='row'>
@@ -14,31 +24,27 @@ function AdminViewProduct() {
                             <th scope="col">No</th>
                             <th scope="col">Title</th>
                             <th scope="col">Category</th>
+                            <th scope="col">Price</th>
                             <th scope="col">Description</th>
                             <th scope="col">Image</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        {product.map((products)=>{
+                            return(
+                        
+                            <tr>
                             <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>Larry</td>
-                            <td>the Bird</td>
-                            <td>@twitter</td>
-                        </tr>
+                            <td>{products.name}</td>
+                            <td>{products.category}</td>
+                            <td>{products.price}</td>
+                            <td>{products.description}</td>
+                            <td><img src={`${baseUrl}/images/product-images/${products.image}`} alt="" style={{width: "50px", height: "50px"}}/></td>
+                        </tr>)})}
+                    
                     </tbody>
                 </table>
+                
             </div>
         
     )

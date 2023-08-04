@@ -5,11 +5,13 @@ const ProductModel = require('./Models/ProductSchema');
 const multer = require('multer');
 const bodyParser = require('body-parser');
 
+
 const app = express();
 const PORT = process.env.PORT || 3001;
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(cors());
+app.use(express.static('public'));
 
 mongoose.connect('mongodb://localhost:27017/shoppingCart', {
     useNewUrlParser: true,
@@ -21,7 +23,7 @@ const storage = multer.diskStorage({
       cb(null, 'public/images/product-images'); // Set the destination folder for uploaded images
     },
     filename: (req, file, cb) => {
-      cb(null, file.originalname); // Use the original filename for the uploaded image
+      cb(null, `product_image_${file.originalname}`); // Use the original filename for the uploaded image
     },
   });
   const upload = multer({ storage });
@@ -31,6 +33,7 @@ app.post('/addProduct',upload.single('image'), (req,res)=>{
     const image = req.file ? `product_image_${req.file.originalname}` : '';
     const product = {name, category, price, description,image}
     const newProduct = new ProductModel(product);
+    
     newProduct.save().then((savedproduct)=>{
          console.log(savedproduct);
          res.json(savedproduct);
@@ -40,7 +43,15 @@ app.post('/addProduct',upload.single('image'), (req,res)=>{
     })
 })
 
-app.use('/images', express.static('public/images'));
+app.get('/getProduct',(req,res)=>{
+  ProductModel.find({}).then((response)=>{
+    res.json(response)
+  }).catch((err)=>{
+    res.json(err)
+  })
+})
+
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

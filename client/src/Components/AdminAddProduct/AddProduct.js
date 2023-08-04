@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
+import {baseUrl} from '../../URL';
 
 function AddProduct() {
     const [name, setName] = useState('');
@@ -19,7 +20,7 @@ function AddProduct() {
       formData.append('price',price);
       formData.append('description',description);
       formData.append('image',image);
-      axios.post('http://localhost:3001/addProduct',formData).then((res)=> {
+      axios.post(`${baseUrl}/addProduct`,formData).then((res)=> {
         alert('Product added successfully')
         navigate('/admin')
       }).catch(error=>alert(error))
