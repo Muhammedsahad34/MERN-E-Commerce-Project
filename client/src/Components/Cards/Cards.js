@@ -1,17 +1,46 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import axios from 'axios';
+import { baseUrl } from '../../URL';
 
 function Cards() {
+
+    const [viewProduct, setViewProduct] = useState([])
+    useEffect(() => {
+        axios.get(`${baseUrl}/getProduct`).then((response) => {
+            // console.log(response.data)
+            setViewProduct(response.data)
+
+
+
+
+        }).catch((error) => { console.log(error) })
+
+    }
+        , [])
     return (
-        <div>
-            <div class="card" style={{width: '18rem'}}>
-                <img class="card-img-top" src="https://img3.gadgetsnow.com/gd/images/products/additional/large/G390874_View_1/mobiles/smartphones/apple-iphone-14-pro-max-1-tb-deep-purple-6-gb-ram-.jpg" alt="Card image cap" />
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
+
+        <div className='container'>
+            <div className="row">
+                {
+                    viewProduct.map((obj) => {
+                        return (
+                            <div className='col-md-3 mt-4'>
+                            <div class="card" style={{ width: '15rem',height:'25rem' }}>
+                                <img class="card-img-top" src={`${baseUrl}/images/product-images/${obj.image}`} alt="Card image cap" style={{height:'12rem'}}/>
+                                <div class="card-body">
+                                    <h5 class="card-title">{obj.name}  Price: {obj.price}</h5>
+                                    <p class="card-text">{obj.category}</p>
+                                    <p class="card-text">{obj.description}</p>
+                                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                                </div>
+                            </div>
+                            </div>
+                        )
+                    })}
                 </div>
-            </div>
+            
         </div>
+
     )
 }
 

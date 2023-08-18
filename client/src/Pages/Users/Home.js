@@ -5,8 +5,9 @@ import Cards from '../../Components/Cards/Cards'
 function Home() {
   return (
     <div>
-        <Header/>
-        <Cards/>
+      <Header />
+      <Cards />
+
     </div>
   )
 }
