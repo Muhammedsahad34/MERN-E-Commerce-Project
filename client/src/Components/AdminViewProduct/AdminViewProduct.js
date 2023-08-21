@@ -2,20 +2,28 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { baseUrl } from '../../URL';
-import { ProductContext } from '../../Contexts/ProductContext';
+
 
 
 function AdminViewProduct() {
     const navigate = useNavigate();
     const [product, setProduct] = useState([]);
-    const {setProductDetails} = useContext(ProductContext);
+    const handleDelete = (proId)=>{
+        if(window.confirm('Are you want to delete')){
+
+        
+        axios.get(`${baseUrl}/productDelete/${proId}`).then((res)=>{
+            console.log(res.data);
+        }).catch((err)=>{
+            console.log(err);
+        })
+    }
+    }
+    
     
     useEffect(()=>{
         axios.get(`${baseUrl}/getProduct`).then((response)=>{
-            // console.log(response.data)
             setProduct(response.data)
-            setProductDetails(response.data);
-            
             
             
         }).catch((error)=>{console.log(error)})
@@ -36,20 +44,26 @@ function AdminViewProduct() {
                             <th scope="col">Price</th>
                             <th scope="col">Description</th>
                             <th scope="col">Image</th>
+                            <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {
-                        product.map((products)=>{
+                        product.map((products,index)=>{
                             return(
                                 
                             <tr>
-                            <th scope="row">1</th>
+                            <th scope="row">{index + 1}</th>
                             <td>{  products.name}</td>
                             <td>{  products.category}</td>
                             <td>{  products.price}</td>
                             <td>{  products.description}</td>
-                            <td><img src={`${baseUrl}/images/product-images/${  products.image}`} alt="" style={{width: "50px", height: "50px"}}/></td>
+                            <td><img src={`${baseUrl}/images/product-images/${products.image}`} alt="" style={{width: "50px", height: "50px"}}/></td>
+                            <td><button className='btn btn-primary'onClick={()=>{
+                                navigate(`/edit-product/${products._id}`)
+                            }}>Edit</button>
+                                <button className='btn btn-danger'onClick={()=>{
+                                    handleDelete(products._id)}}>Delete</button></td>
                         </tr>)})}
                     
                     </tbody>

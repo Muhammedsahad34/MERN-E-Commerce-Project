@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 import DropDown from '../DropDownMenu/DropDown';
+import { UserContext } from '../../Contexts/UserContext';
 
 function Header(props) {
     
     const navigate = useNavigate();
+    const {userDetails} = useContext(UserContext);
     return (
         <div>
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -22,13 +24,18 @@ function Header(props) {
                                 <a className="nav-link" href="#">{props.isAdmin ? "All Orders" : "Cart"}</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" onClick={() => { }}>{props.isAdmin ? "All Users" : "Orders"}</a>
+                                {props.isAdmin ? <a className="nav-link" onClick={() => { }} style={{cursor: 'pointer'}}>All Users</a>:
+                                <a className="nav-link" onClick={() => {if(userDetails.valid){
+
+                                }else{navigate('/login')} }} style={{cursor: 'pointer'}}>Orders</a>}
                             </li>
 
                         </ul>
+                        {props.isAdmin ? <div className='mx-auto'><input className="form-control" type="search" placeholder="Search" aria-label="Search"/>
+                                        <button className="btn btn-outline-success mt-3" type="submit">Search</button></div> :
                         <div>
                             <DropDown/>
-                        </div>
+                        </div>}
                     </div>
                 </div>
             </nav>

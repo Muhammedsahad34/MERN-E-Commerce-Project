@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {baseUrl} from '../../URL';
@@ -7,9 +7,15 @@ import { UserContext } from '../../Contexts/UserContext';
 function Login() {
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('');
-  // const {setUserDetails} = useContext(UserContext);
   const navigate = useNavigate();
-  
+  useEffect(()=>{
+    axios.get(`${baseUrl}/getprofile`).then((res)=>{
+      if(res.data.valid){
+        navigate('/')
+      }
+    })
+  })
+
   const handleLogin = (e)=>{
     e.preventDefault();
     const user = {email, password}
@@ -17,10 +23,12 @@ function Login() {
       if(res.data.status === 'true'){
         // setUserDetails(res.data.user)
           navigate('/')
-      }else{
+      }
+      else{
         alert('Email or Password is Invalid')
         navigate('/login');
       }
+      console.log(res.data);
     }).catch((err)=>{
       alert(err)
     })
