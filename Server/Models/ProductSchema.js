@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const collection = require('../Collections')
 const ProductSchema = new mongoose.Schema({
-    name:{
+name:{
         type:String,
         required:true
     },

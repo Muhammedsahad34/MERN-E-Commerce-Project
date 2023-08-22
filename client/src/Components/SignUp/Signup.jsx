@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import axios from 'axios';
 import { baseUrl } from '../../URL';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../Contexts/UserContext';
 function Signup() {
     const [fullname, setFullname] = useState('');
     const [email, setEmail] = useState('');
@@ -9,6 +10,7 @@ function Signup() {
     const [conpass, setConpass] = useState('');
     const [mobile, setMobile] = useState(0);
     const [mismatch,setMismatch]= useState(false);
+    const {setUserDetails} = useContext(UserContext);
     const navigate = useNavigate();
     
 
@@ -30,7 +32,7 @@ function Signup() {
                 alert('Email Already Exist')
                 navigate('/signup')
             }else{
-                
+                setUserDetails(response.data)
                 navigate('/')
                 
             }
@@ -38,7 +40,7 @@ function Signup() {
         }).catch((err)=>{alert(err)})
 
     }
-
+    axios.defaults.withCredentials = true;
     return (
         <div className="container">
             <div className='row mt-5 d-flex justify-content-center'>

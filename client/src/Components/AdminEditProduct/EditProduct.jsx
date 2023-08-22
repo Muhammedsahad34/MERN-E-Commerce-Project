@@ -14,6 +14,7 @@ function EditProduct({match}) {
     const [oldimage, setOldimage] = useState('');
     const {id} = useParams();
     const navigate = useNavigate();
+    const [selectedImage, setSelectedimage] = useState(null);
 
     useEffect(()=>{
         axios.get(`${baseUrl}/oneProduct/${id}`).then((res)=>{
@@ -40,7 +41,12 @@ function EditProduct({match}) {
             navigate('/admin')
         }).catch(error=>alert(error))
     }
+    const handleImageChange = (e)=>{
+        const file = e.target.files[0];
+        setSelectedimage(URL.createObjectURL(file));
+        setProduct({...product,image:file})
 
+    }
     return (
         <div>
             <div className='container mt-4'>
@@ -55,9 +61,9 @@ function EditProduct({match}) {
                         <input type="number" name='Price' className='form-control' onChange={(e) => { setProduct({...product,price:e.target.value}) }} defaultValue={product.price}/>
                         <label htmlFor="">Description</label>
                         <input type="text" name='Description' className='form-control' onChange={(e) => { setProduct({...product,description:e.target.value}) }} defaultValue={product.description}/>
-                        <img src={`${baseUrl}/images/product-images/${product.image}`} alt="" style={{width: '150px',height:'auto'}}/>
+                        <img src={selectedImage || `${baseUrl}/images/product-images/${product.image}`} alt="" style={{width: '150px',height:'auto'}}/>
                         <label htmlFor="">Image</label>
-                        <input type="file" className='form-control' onChange={(e) => { setProduct({...product,image:e.target.files[0]}) }} />
+                        <input type="file" className='form-control' onChange={handleImageChange} />
 
                         <button className='btn btn-success mt-4' onClick={handleUpdate}>Submit</button>
                     </div>

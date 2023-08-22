@@ -8,6 +8,7 @@ const UserModel = require('./Models/UserSchema');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const CartModel = require('./Models/CartSchema');
 
 
 const app = express();
@@ -74,8 +75,12 @@ app.post('/signup', async (req, res) => {
        res.json('false')
     }else{
       const newUser = new UserModel(user);
-      newUser.save();
-       res.json('true')
+      newUser.save().then((response)=>{
+        req.session.user = response;
+        res.json('true')
+      })
+      
+       
     }
 
   } catch (error) {
@@ -158,6 +163,51 @@ app.post('/updateProduct/:id',upload.single('image'), async(req,res)=>{
     res.json(err)
   })
 })
+
+app.get('/addToCart/:id', async(req,res)=>{
+  const proId = req.params.id;
+  const userId = req.session.user._id;
+  try{
+    let userCart = await CartModel.findOne({user:userId});
+    if(userCart){
+      const existingProduct = userCart.products.findIndex(product=>product.item.toString()==proId);
+      if(existingProduct !== -1){
+        userCart.products[existingProduct].count += 1;
+      }else{
+        userCart.products.push({item:proId,count:1})
+      }
+      await userCart.save().then((response)=>{
+        res.json(response)
+      }).catch(err=>console.log(err));
+    }else{
+      userCart = new CartModel({user:userId,products:[{item:proId,count:1}]});
+      await userCart.save().then((response)=>{
+        res.json(response);
+      }).catch((err)=>{
+        res.json(err);
+      })
+     
+    }
+
+  }catch(err){
+    console.log(err)
+  }
+});
+
+app.get('/fetchCart',async(req,res)=>{
+  userId = req.session.user._id;
+  const cart = await CartModel.findOne({user:userId})
+  if(!cart){
+    res.json(false)
+  }else{
+    const productIdsIncart = cart.products.map(product=>product.item);
+    const productsInCart = await ProductModel.find({
+      _id:{$in:productIdsIncart}
+    });
+    res.json(productsInCart)
+  }
+
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
