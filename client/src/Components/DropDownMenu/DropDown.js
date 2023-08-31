@@ -24,7 +24,6 @@ function DropDown(props) {
             setUser(response.data.user);
             setValid(response.data.valid);
             setUserDetails(response.data);
-            console.log(response.data);
         }).catch((err)=>{
             console.log(err);
         })

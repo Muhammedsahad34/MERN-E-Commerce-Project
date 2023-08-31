@@ -9,6 +9,7 @@ const bcrypt = require('bcrypt');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const CartModel = require('./Models/CartSchema');
+const OrderModel = require('./Models/OrderSchema');
 
 
 const app = express();
@@ -196,18 +197,108 @@ app.get('/addToCart/:id', async(req,res)=>{
 
 app.get('/fetchCart',async(req,res)=>{
   userId = req.session.user._id;
-  const cart = await CartModel.findOne({user:userId})
-  if(!cart){
-    res.json(false)
-  }else{
-    const productIdsIncart = cart.products.map(product=>product.item);
-    const productsInCart = await ProductModel.find({
-      _id:{$in:productIdsIncart}
-    });
-    res.json(productsInCart)
-  }
+  const productsInCart = await CartModel.aggregate([
+    {
+      $match:{user:userId}
+    },
+    {
+      $unwind:'$products'
+    },
+    {
+      $lookup:{
+        from: 'products',
+        localField:'products.item',
+        foreignField:'_id',
+        as:'productDetails'
+      }
+    },
+    {
+      $unwind:'$productDetails'
+    },
+    {
+      $project:{
+        _id:'$productDetails._id',
+        name:'$productDetails.name',
+        category: '$productDetails.category',
+        price: '$productDetails.price',
+        image:'$productDetails.image',
+        count: '$products.count'
 
+      }
+    }
+  ])
+  let totalPrice = 0;
+    productsInCart.forEach(element => {
+      totalPrice = totalPrice + element.count * element.price
+  });
+  if(productsInCart.length === 0){
+    res.json({data:false,total:0})
+  }else{
+    res.json({data:productsInCart,total:totalPrice});
+  }
+  
+  
 });
+
+app.get('/incDecCart/:id/:count',async (req,res)=>{
+  proId = req.params.id;
+  userId = req.session.user._id;
+  incDec = parseInt(req.params.count);
+  const userCart = await CartModel.findOne({user:userId});
+  if(userCart){
+    const productIndex = userCart.products.findIndex(product=>product.item.toString()=== proId);
+    if(productIndex !== -1){
+      userCart.products[productIndex].count += incDec;
+      await userCart.save().then((response)=>{
+        res.json(response.products[productIndex]);
+      })
+    }
+  }
+  
+})
+
+app.get('/removeFromCart/:id',async(req,res)=>{
+  proId = req.params.id;
+  userId = req.session.user._id;
+  cart = await CartModel.findOneAndUpdate({user:userId,'products.item':proId},
+  {$pull:{products:{item:proId}}},
+  {new:true}
+  ).then((respnse)=>{
+  
+     res.json(respnse);
+  })
+})
+
+app.post('/placeOrder',async(req,res)=>{
+  const {adress,pincode,number,total,paymentMethod} = req.body;
+  const status = paymentMethod === 'COD' ? 'Placed':'Pending';
+  const userId = req.session.user._id;
+  const cart = await CartModel.findOne({user:userId});
+  const products = cart.products;
+  const order = {
+    user:userId,
+    deliveryDetails:{
+      adress,
+      pincode,
+      number
+    },
+    products,
+    total,
+    paymentMethod,
+    status,
+    date: new Date(),
+  }
+  newOrder = new OrderModel(order);
+  newOrder.save().then(async(response)=>{
+    if(response.status === 'Placed'){
+      await CartModel.findOneAndRemove({user:userId})
+      res.json({data:response,placed:true})
+    }else{
+      
+    }
+  }).catch((err)=>console.log(err));
+
+})
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

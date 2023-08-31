@@ -1,0 +1,22 @@
+input{
+    border-radius: 5rem;
+    height: 30px;
+}
+.payment{
+    border: 3px solid rgb(167, 16, 142);
+    border-radius: 5px;
+    width: fit-content;
+    padding-left: 2rem;
+    padding-top: 1rem;
+    padding-right: 2rem;
+    height: 18rem;
+    margin-top: 5rem;
+
+}
+
+label{
+    font-weight: bold;
+}
+h6{
+    font-weight: bold;
+}

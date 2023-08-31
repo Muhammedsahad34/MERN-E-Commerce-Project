@@ -8,6 +8,7 @@ import SignupPage from './Pages/Users/SignupPage';
 import UserDetails from './Contexts/UserContext';
 import EditProductPage from './Pages/Admin/EditProductPage';
 import CartPage from './Pages/Users/CartPage';
+import PlaceOrderPage from './Pages/Users/PlaceOrderPage';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
           <Route path='/add-product' element={<AddProducts/>}/>
           <Route path='/edit-product/:id' element={<EditProductPage/>}/>
           <Route path='/cart' element={<CartPage/>}/>
+          <Route path='/place-order/:total' element={<PlaceOrderPage/>}/>
 
           
         </Routes>
