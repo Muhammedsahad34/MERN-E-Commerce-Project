@@ -11,7 +11,7 @@ function Cards() {
     const navigate = useNavigate();
     useEffect(() => {
         axios.get(`${baseUrl}/getProduct`).then((response) => {
-            // console.log(response.data)
+            
             setViewProduct(response.data)
         }).catch((error) => { console.log(error) })
 
@@ -37,7 +37,7 @@ function Cards() {
                 {
                     viewProduct.map((obj) => {
                         return (
-                            <div className='col-md-3 mt-4'>
+                            <div className='col-md-3 mt-4 me-1'>
                                 <div class="card" style={{ width: '15rem', height: '25rem' }}>
                                     <img class="card-img-top" src={`${baseUrl}/images/product-images/${obj.image}`} alt="Card image cap" style={{ height: '12rem' }} />
                                     <div class="card-body">

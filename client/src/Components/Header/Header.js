@@ -34,7 +34,7 @@ function Header(props) {
                                 {props.isAdmin ? <a className="nav-link" onClick={() => { }} style={{ cursor: 'pointer' }}>All Users</a> :
                                     <a className="nav-link" onClick={() => {
                                         if (userDetails.valid) {
-
+                                            navigate('/view-orders')
                                         } else { navigate('/login') }
                                     }} style={{ cursor: 'pointer' }}>Orders</a>}
                             </li>

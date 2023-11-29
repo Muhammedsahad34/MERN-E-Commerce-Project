@@ -10,6 +10,12 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const CartModel = require('./Models/CartSchema');
 const OrderModel = require('./Models/OrderSchema');
+const crypto = require('crypto');
+const Razorpay = require('razorpay');
+var instance = new Razorpay({
+  key_id: 'rzp_test_TNgeRWAxCwvh66',
+  key_secret: 'DcbcNNS0AJWuGrzwGVKsXjKD',
+});
 
 
 const app = express();
@@ -31,6 +37,7 @@ mongoose.connect('mongodb://localhost:27017/shoppingCart', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -91,7 +98,6 @@ app.post('/signup', async (req, res) => {
 
 
 app.post('/login',async (req,res)=>{
-
   let {email,password} = req.body;
   try{
     const user = await UserModel.find({email});
@@ -291,14 +297,48 @@ app.post('/placeOrder',async(req,res)=>{
   newOrder = new OrderModel(order);
   newOrder.save().then(async(response)=>{
     if(response.status === 'Placed'){
-      await CartModel.findOneAndRemove({user:userId})
+      
       res.json({data:response,placed:true})
     }else{
-      
+      instance.orders.create({
+        amount: total * 100,
+        currency: "INR",
+        receipt: response._id,
+      },function (err,order){
+        res.json(order)
+      })
     }
+    await CartModel.findOneAndRemove({user:userId})
   }).catch((err)=>console.log(err));
 
-})
+});
+
+app.get('/fetchOrderDetails',async(req,res)=>{
+  userId = req.session.user._id;
+  const orderDetails = await OrderModel.find({user:userId})
+  res.json( orderDetails);
+});
+
+app.post('/savePayment',async(req,res)=>{
+  const details = req.body;
+  let hmac = crypto.createHmac('sha256','DcbcNNS0AJWuGrzwGVKsXjKD');
+  hmac.update(details.paymentDetails.razorpay_order_id + '|' + details.paymentDetails.razorpay_payment_id);
+  hmac = hmac.digest('hex');
+  if(hmac == details.paymentDetails.razorpay_signature){
+    await OrderModel.findByIdAndUpdate(details.orderDetails.receipt,{status:'Placed'},{new:true}).then((response)=>{
+      res.json({status:true})
+    }).catch((err)=>{
+      res.json({status:false})
+    })
+  }else{
+    res.json({status:false});
+  }
+});
+
+app.get('/fetchEachOrder/:id',async(req,res)=>{
+  const orderId = req.params.id;
+  
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

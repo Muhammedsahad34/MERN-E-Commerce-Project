@@ -9,6 +9,8 @@ import UserDetails from './Contexts/UserContext';
 import EditProductPage from './Pages/Admin/EditProductPage';
 import CartPage from './Pages/Users/CartPage';
 import PlaceOrderPage from './Pages/Users/PlaceOrderPage';
+import ViewOrderPage from './Pages/Users/ViewOrderPage';
+import ViewOrderDetailPage from './Pages/Users/ViewOrderDetailPage';
 
 
 function App() {
@@ -27,6 +29,8 @@ function App() {
           <Route path='/edit-product/:id' element={<EditProductPage/>}/>
           <Route path='/cart' element={<CartPage/>}/>
           <Route path='/place-order/:total' element={<PlaceOrderPage/>}/>
+          <Route path='/view-orders' element={<ViewOrderPage/>}/>
+          <Route path='/view-order-details/:id' element={<ViewOrderDetailPage/>}/>
 
           
         </Routes>
