@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { baseUrl } from '../../URL'
 import { useNavigate } from 'react-router-dom';
+import './Cart.css'
 
 function Cart() {
     const [cartItems, setCartItems] = useState([]);
@@ -52,7 +53,7 @@ function Cart() {
     }
 
     return (
-        <div className='container'>
+        <div className='container cart'>
             {
                 cartItems ?
                     <div>

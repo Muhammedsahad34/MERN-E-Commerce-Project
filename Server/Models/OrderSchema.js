@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const collection = require('../Collections')
+const collection = require('../Collections');
+const ProductModel = require('./ProductSchema');
 const OrderSchema = new mongoose.Schema({
 user:{
         type:String,
@@ -21,7 +22,8 @@ user:{
     },
     products:[{
         item:{
-        type:String,
+        type:mongoose.Schema.ObjectId,
+        ref:ProductModel,
         required:true
         },
         count:{

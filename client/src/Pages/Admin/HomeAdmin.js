@@ -1,11 +1,11 @@
 import React from 'react'
-import Header from '../../Components/Header/Header'
-import AdminViewProduct from '../../Components/AdminViewProduct/AdminViewProduct'
+import AdminViewProduct from '../../Components/AdminViewProduct/AdminViewProduct';
+import AdminHeader from '../../Components/AdminHeader/AdminHeader';
 
 function HomeAdmin(props) {
   return (
     <div>
-        <Header isAdmin={props.isAdmin}/>
+        <AdminHeader/>
         <AdminViewProduct/>
         
     </div>

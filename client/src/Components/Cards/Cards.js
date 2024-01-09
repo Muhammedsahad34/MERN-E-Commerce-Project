@@ -3,6 +3,7 @@ import axios from 'axios';
 import { baseUrl } from '../../URL';
 import { UserContext } from '../../Contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
+import './Cards.css';
 
 function Cards() {
 
@@ -32,13 +33,13 @@ function Cards() {
 
     return (
 
-        <div className='container'>
+        <div className='container pos'>
             <div className="row">
                 {
                     viewProduct.map((obj) => {
                         return (
-                            <div className='col-md-3 mt-4 me-1'>
-                                <div class="card" style={{ width: '15rem', height: '25rem' }}>
+                            <div className='col-sm-6 col-md-4 col-lg-3 mt-4 me-1'>
+                                <div class="card mx-auto mb-4" style={{ width: '15rem', height: '25rem' }}>
                                     <img class="card-img-top" src={`${baseUrl}/images/product-images/${obj.image}`} alt="Card image cap" style={{ height: '12rem' }} />
                                     <div class="card-body">
                                         <h5 class="card-title">{obj.name}  Price: {obj.price}</h5>

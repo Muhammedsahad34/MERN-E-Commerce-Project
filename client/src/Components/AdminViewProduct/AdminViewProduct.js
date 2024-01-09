@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { baseUrl } from '../../URL';
+import './AdminViewProduct.css';
 
 
 
@@ -30,9 +31,9 @@ function AdminViewProduct() {
 
     })
     return (
-        <div className='container-fluid'>
+        <div className='container-fluid admin-view-product'>
             <div className='row'>
-                <button className='btn btn-success w-25 mt-4 ms-auto' onClick={()=>{navigate('/add-product')}}>Add Products</button>
+                <button className='btn btn-success w-25 mt-4 ms-auto me-3' onClick={()=>{navigate('/admin/add-product')}}>Add Products</button>
             </div>
             
                 <table class="table table-dark mt-5">
@@ -60,9 +61,9 @@ function AdminViewProduct() {
                             <td>{  products.description}</td>
                             <td><img src={`${baseUrl}/images/product-images/${products.image}`} alt="" style={{width: "50px", height: "50px"}}/></td>
                             <td><button className='btn btn-primary'onClick={()=>{
-                                navigate(`/edit-product/${products._id}`)
+                                navigate(`/admin/edit-product/${products._id}`)
                             }}>Edit</button>
-                                <button className='btn btn-danger'onClick={()=>{
+                                <button className='btn btn-danger ms-2'onClick={()=>{
                                     handleDelete(products._id)}}>Delete</button></td>
                         </tr>)})}
                     

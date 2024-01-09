@@ -1,3 +1,7 @@
+.t-row{
+    box-shadow: 5px 5px 5px;
+}
 .t-row :hover{
     background-color: rgb(181, 181, 181);
+    box-shadow: 5px 5px 5px black;
 }

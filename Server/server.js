@@ -12,6 +12,7 @@ const CartModel = require('./Models/CartSchema');
 const OrderModel = require('./Models/OrderSchema');
 const crypto = require('crypto');
 const Razorpay = require('razorpay');
+const AdminModel = require('./Models/AdminSchema');
 var instance = new Razorpay({
   key_id: 'rzp_test_TNgeRWAxCwvh66',
   key_secret: 'DcbcNNS0AJWuGrzwGVKsXjKD',
@@ -37,6 +38,11 @@ mongoose.connect('mongodb://localhost:27017/shoppingCart', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
+const verifyAdmin = (req,res,next)=>{
+  if(req.session.admin){
+    next()
+  }
+}
 
 
 const storage = multer.diskStorage({
@@ -131,14 +137,12 @@ app.get('/getprofile',(req, res)=>{
 })
 
 app.get('/logout', (req,res)=>{
-  req.session.destroy((err)=>{
-    if(err){
-      res.json({status: 'error'})
-    }else{
-      res.clearCookie('my-session-cookie')
-      res.json({status: 'success'})
-    }
-  })
+  req.session.user = null;
+  if(req.session.user !== null){
+    res.json(false)
+  }else{
+    res.json(true)
+  }
 })
 
 app.get('/productDelete/:id', async(req,res)=>{
@@ -315,7 +319,7 @@ app.post('/placeOrder',async(req,res)=>{
 
 app.get('/fetchOrderDetails',async(req,res)=>{
   userId = req.session.user._id;
-  const orderDetails = await OrderModel.find({user:userId})
+  const orderDetails = await OrderModel.find({user:userId});
   res.json( orderDetails);
 });
 
@@ -337,8 +341,107 @@ app.post('/savePayment',async(req,res)=>{
 
 app.get('/fetchEachOrder/:id',async(req,res)=>{
   const orderId = req.params.id;
+  const orderDetails = await OrderModel.aggregate([
+    
+      {
+        $match: { _id: new mongoose.Types.ObjectId(orderId)}
+      },
+      {
+        $unwind:"$products"
+      },
+      {
+        $lookup:{
+          from:"products",
+          localField:"products.item",
+          foreignField:"_id",
+          as:"productDetails"
+        }
+      },
+      {
+        $unwind:"$productDetails"
+      },
+      {
+        $project: {
+          _id: 1,
+          user: 1,
+          deliveryDetails: 1,
+          total: 1,
+          paymentMethod: 1,
+          status: 1,
+          date: 1,
+          __v: 1,
+          productDetails: 1
+        }
+      },
+      {
+        $group: {
+          _id: {
+            _id: "$_id",
+            user: "$user",
+            deliveryDetails: "$deliveryDetails",
+            total: "$total",
+            paymentMethod: "$paymentMethod",
+            status: "$status",
+            date: "$date",
+            __v: "$__v",
+          },
+          productDetails: { $push: "$productDetails" }
+        }
+      },
+      {
+        $project: {
+          _id: "$_id._id",
+          user: "$_id.user",
+          deliveryDetails: "$_id.deliveryDetails",
+          total: "$_id.total",
+          paymentMethod: "$_id.paymentMethod",
+          status: "$_id.status",
+          date: "$_id.date",
+          __v: "$_id.__v",
+          productDetails: 1
+        }
+      }
+      
+      
+    ]);
   
+  
+  res.json(orderDetails);
 });
+
+
+app.post('/admin/login',async(req,res) => {
+  let {email,password} = req.body;
+  const username = email;
+  try{
+    
+    const admin = await AdminModel.find({username});
+    if(admin.length > 0){
+      const ispass = await bcrypt.compare(password,admin[0].password);
+      
+      if(ispass === true){
+        req.session.admin = admin[0];
+
+        res.json({status:true,admin:req.session.admin})
+      }else{
+        res.json(false)
+      }
+    }else{
+      res.json(false);
+    }
+
+  }catch(error){
+    res.json(error)
+  }
+  
+})
+app.get('/admin/getAdmin',verifyAdmin, (req,res)=>{
+  if(req.session.admin){
+    res.json({status:true,data:req.session.admin})
+  }else{
+    res.json(false)
+  }
+})
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

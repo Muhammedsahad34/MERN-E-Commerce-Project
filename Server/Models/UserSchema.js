@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const collection = require('../Collections')
+const collection = require('../Collections');
 const UserSchema = new mongoose.Schema({
     fullname:{
         type:String,
