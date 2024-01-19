@@ -23,7 +23,7 @@ function PlaceOrder() {
                     key: "rzp_test_TNgeRWAxCwvh66", // Enter the Key ID generated from the Dashboard
                     amount: res.data.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
                     currency: "INR",
-                    name: "Sahad Online Cart", //your business name
+                    name: "Let's Buy", //your business name
                     description: "Test Transaction",
                     order_id: res.data.id,
                     handler:function(response){
@@ -38,6 +38,7 @@ function PlaceOrder() {
                                 navigate('/view-orders');
                             }else{
                                 alert('Payment Failed');
+                                rzp1.open()
                             }
                             
                         }).catch(err=>alert(err));
@@ -47,7 +48,7 @@ function PlaceOrder() {
                 rzp1.open();
             }
         }).catch((err) => {
-            console.log(err);
+            alert(err);
         })
     }
     return (

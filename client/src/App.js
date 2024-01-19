@@ -16,6 +16,8 @@ import { useEffect, useState } from 'react';
 import AdminLoginPage from './Pages/Admin/AdminLoginPage';
 import AdminDetails from './Contexts/AdminContext';
 import PrivateRoutes from './Components/PrivateRoutes/PrivateRoutes';
+import ProductDetailPage from './Pages/Users/ProductDetailPage';
+import AllProductsPage from './Pages/Users/AllProductsPage';
 
 
 function App() {
@@ -40,7 +42,7 @@ function App() {
       <UserDetails>
         <Router>
           <Routes>
-
+            <Route path='/spa' element={<SplashScreen/>} />
             <Route path='/' element={showSplash ? <SplashScreen /> : <Home />} />
             <Route path='/login' element={<LoginPage />} />
             <Route path='/signup' element={<SignupPage />} />
@@ -48,6 +50,8 @@ function App() {
             <Route path='/place-order/:total' element={<PlaceOrderPage />} />
             <Route path='/view-orders' element={<ViewOrderPage />} />
             <Route path='/view-order-details/:id' element={<ViewOrderDetailPage />} />
+            <Route path='/Product-detail/:id' element={<ProductDetailPage />} />
+            <Route path='/products' element={<AllProductsPage />} />
 
           </Routes>
         </Router>
@@ -58,11 +62,11 @@ function App() {
           <Routes>
 
             <Route path='/admin/login' element={<AdminLoginPage />} />
-            <Route element={<PrivateRoutes/>}>
+            <Route path='/admin' element={<PrivateRoutes/>}>
 
-            <Route path='/admin/home' element={<HomeAdmin/>} />
-            <Route path='/admin/add-product' element={<AddProducts />} />
-            <Route path='/admin/edit-product/:id' element={<EditProductPage />} />
+            <Route path='home' element={<HomeAdmin/>} />
+            <Route path='add-product' element={<AddProducts />} />
+            <Route path='edit-product/:id' element={<EditProductPage />} />
             </Route>
 
           </Routes>

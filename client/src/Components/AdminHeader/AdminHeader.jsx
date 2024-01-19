@@ -10,14 +10,13 @@ function AdminHeader() {
     const {adminDetails,setAdminDetails} = useContext(AdminContext);
     useEffect(()=>{
         axios.get(`${baseUrl}/admin/getAdmin`,{withCredentials:true}).then((res)=>{
-            console.log(res.data);
             setAdminDetails(res.data);
         })
     },[])
 
 
     return (
-        <nav className='bg-secondary mb-5'>
+        <nav className='bg-secondary mb-5 nav-admin'>
             <Link to='/admin/home' className='title'>Let's Buy Admin</Link>
             <div><input type="text" placeholder='search the products' className='ps-5' /></div>
             <div className={`menu ${isOpen ? "rot" : ""}`} onClick={() => { setIsOpen(!isOpen) }}>

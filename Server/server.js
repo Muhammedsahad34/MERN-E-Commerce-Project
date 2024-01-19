@@ -132,7 +132,7 @@ app.get('/getprofile',(req, res)=>{
   if(req.session.user){
     return res.json({valid:true, user:req.session.user})
   }else{
-    return res.json({valid:false})
+    return res.json(null)
   }
 })
 
@@ -441,6 +441,17 @@ app.get('/admin/getAdmin',verifyAdmin, (req,res)=>{
   }else{
     res.json(false)
   }
+});
+app.get('/eachProduct/:id', async(req,res) => {
+  const {id} = req.params;
+  try{
+    const product = await ProductModel.findById({_id:id});
+    res.json(product);
+  }catch(err){
+    res.json(err)
+
+  }
+  
 })
 
 app.listen(PORT, () => {

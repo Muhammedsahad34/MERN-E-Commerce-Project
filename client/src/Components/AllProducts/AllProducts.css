@@ -1,0 +1,86 @@
+*{
+    box-sizing: border-box;
+}
+.All-products-main{
+    position: relative;
+    top: 10vh;
+    width: 100%;
+    height: auto;
+}
+.selection{
+    margin: 0 1vh;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    width: 15vw;
+}
+.selection option{
+    font-family: 'Times New Roman', Times, serif;
+    
+}
+.sub-header{
+    justify-content: space-evenly;
+    width: 100%;
+    height: auto;
+}
+.search input{
+    width: 15vw;
+    border: none;
+    outline: 1px solid;
+    border-radius: 2px;
+}
+.each-product{
+    height: 75vh;
+    gap: 1vh;
+    
+}
+.every-product img{
+    width:25vw;
+    height: 100%;
+    cursor: pointer;
+    
+}
+.content{
+    position: relative;
+    flex-grow: 1;
+    align-self: stretch;
+}
+.content button{
+    position: absolute;
+    bottom: 0;
+    width: 49%;
+}
+.car-btn{
+    right: 0;
+}
+.every-product{
+    justify-content: space-evenly;
+    height: auto;
+    overflow: hidden;
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+}
+
+@media (max-width:900px) {
+    .selection{
+        width: 25vw;
+    }
+    .search input{
+        width: 30vw;
+    }
+    .search{
+        display: flex;
+        flex-direction: column;
+        
+    }
+    .search button{
+        margin: 2vh;
+    }
+    .every-product img{
+        width:30vw;
+        height: 30vw;
+    }
+    .content h3{
+        font-size: 1.3rem;
+
+    }
+    
+}

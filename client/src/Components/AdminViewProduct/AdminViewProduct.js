@@ -29,7 +29,7 @@ function AdminViewProduct() {
             
         }).catch((error)=>{console.log(error)})
 
-    })
+    },[])
     return (
         <div className='container-fluid admin-view-product'>
             <div className='row'>

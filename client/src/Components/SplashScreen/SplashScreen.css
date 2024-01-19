@@ -1,0 +1,15 @@
+.splash-main{
+    width: 100%;
+    height: 100vh;
+    animation: toptobottom 5s linear;
+}
+
+
+@keyframes toptobottom{
+    from{
+        height: 100vh;
+    }
+    to{
+        height: 0vh;
+    }
+}

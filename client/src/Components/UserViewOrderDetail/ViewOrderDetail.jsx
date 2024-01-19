@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { baseUrl } from '../../URL';
 import './ViewOrderDetail.css';
-import image from '../../Assets/images/image.jpg'
+
 
 function ViewOrderDetail() {
   const { id } = useParams();
@@ -65,7 +65,7 @@ function ViewOrderDetail() {
 
                   <div className="col-12 col-md-6 col-lg-4 mt-4 mb-4">
             <div className='image'>
-              <img src={`${baseUrl}/images/product-images/${obj.image}`} alt="product-image" className='image-product' />
+              <img src={`${baseUrl}/images/product-images/${obj.image}`} alt="product" className='image-product' />
               
             </div>
 

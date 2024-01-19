@@ -1,22 +1,29 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import './AdminLogin.css';
 import axios from 'axios';
 import {baseUrl} from '../../URL'
 import { useNavigate } from 'react-router-dom';
-import { AdminContext } from '../../Contexts/AdminContext';
+import  { AdminContext } from '../../Contexts/AdminContext';
 
 function AdminLogin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const {setAdminDetails} = useContext(AdminContext);
   const navigate = useNavigate();
+  useEffect(()=>{
+    const loggedIn = localStorage.getItem('LoggedIn');
+    if(loggedIn){
+      navigate('/admin/home');
+    }
+  },[])
   const handleLogin = (e) => {
     e.preventDefault();
     axios.post(`${baseUrl}/admin/login`,{email,password}).then((res)=>{
       if(res.data.status){
         alert('Login Success');
+        localStorage.setItem('LoggedIn',true)
         setAdminDetails(res.data.admin);
-        navigate('/admin/home');
+        navigate('/admin/home',{replace:true});
       }else{
         alert('Email or password incorrect');
       }

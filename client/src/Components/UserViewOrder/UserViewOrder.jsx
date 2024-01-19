@@ -16,7 +16,7 @@ function UserViewOrder() {
 
   },[])
   return (
-    <div className='container'>
+    <div className='container view-order'>
       <div className="row">
         <div className="col-md-12">
           <table className='table mt-5 centered-headings'>

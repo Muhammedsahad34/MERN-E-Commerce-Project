@@ -1,10 +1,11 @@
-import React from 'react'
+import React from 'react';
+import './SplashScreen.css';
+
 
 function SplashScreen() {
   return (
-    <div className='mx-auto'>
-        Let's Buy
-        Loading....
+    <div className='splash-main bg-dark '>
+       
     </div>
   )
 }
