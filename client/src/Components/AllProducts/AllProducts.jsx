@@ -5,6 +5,7 @@ import { baseUrl } from '../../URL';
 import { useNavigate } from 'react-router-dom';
 import { addtoCart } from '../../Helpers/CartHelper';
 import { UserContext } from '../../Contexts/UserContext';
+import 'react-toastify/dist/ReactToastify.css';
 
 function AllProducts() {
     const [products, setProducts] = useState([]);
@@ -62,6 +63,7 @@ function AllProducts() {
         products.length > 0 ?
 
             <div className='All-products-main w-100'>
+                
                 <div className="sub-header mt-3 d-flex">
                     <div>
                         <label htmlFor="selectionList">Sort:</label>
@@ -91,7 +93,7 @@ function AllProducts() {
                                 <div className='content m-2'>
                                     <h3 className='text-white text-center'>{obj.name}(<span>{obj.category}</span>)</h3>
                                     <h5 className='text-danger text-center'>Price: {obj.price}</h5>
-                                    <button className='btn btn-success'>Buy now</button>
+                                    <button className='btn btn-success' onClick={()=>{navigate(`/place-each-order/${obj.price}/${obj._id}`)}}>Buy now</button>
                                     <button className='btn btn-primary car-btn' onClick={()=>{addtoCart(obj._id,navigate,userDetail)}}>Add to cart</button>
                                 </div>
 

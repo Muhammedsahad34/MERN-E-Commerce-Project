@@ -28,7 +28,7 @@
     border-radius: 2px;
 }
 .each-product{
-    height: 75vh;
+    height: auto;
     gap: 1vh;
     
 }
@@ -57,6 +57,7 @@
     overflow: hidden;
     border-bottom: 1px solid black;
     border-top: 1px solid black;
+    
 }
 
 @media (max-width:900px) {

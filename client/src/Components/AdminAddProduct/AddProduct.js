@@ -22,7 +22,7 @@ function AddProduct() {
       formData.append('image',image);
       axios.post(`${baseUrl}/addProduct`,formData).then((res)=> {
         alert('Product added successfully')
-        navigate('/admin')
+        navigate('/admin/home')
       }).catch(error=>alert(error))
         
       

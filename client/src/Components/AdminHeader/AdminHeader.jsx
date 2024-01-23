@@ -18,7 +18,6 @@ function AdminHeader() {
     return (
         <nav className='bg-secondary mb-5 nav-admin'>
             <Link to='/admin/home' className='title'>Let's Buy Admin</Link>
-            <div><input type="text" placeholder='search the products' className='ps-5' /></div>
             <div className={`menu ${isOpen ? "rot" : ""}`} onClick={() => { setIsOpen(!isOpen) }}>
                 <span></span>
                 <span></span>

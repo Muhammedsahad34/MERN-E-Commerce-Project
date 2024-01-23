@@ -1,0 +1,36 @@
+.view-all-orders {
+    margin-top: 4rem;
+}
+
+.table-container {
+    overflow-x: auto;
+   
+}
+
+.table-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.t-row-1 th,
+td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid black;
+    
+}
+
+.t-row-1 th {
+    background-color: #e47d7d;
+}
+
+.t-row-1{
+    border: 1px solid black;
+}
+.row-2:hover{
+   box-shadow: 5px 5px 5px black;
+}
+.row-2 td{
+    border: 1px solid rgb(27, 25, 25);
+}

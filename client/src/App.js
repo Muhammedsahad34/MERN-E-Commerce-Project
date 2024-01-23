@@ -18,6 +18,9 @@ import AdminDetails from './Contexts/AdminContext';
 import PrivateRoutes from './Components/PrivateRoutes/PrivateRoutes';
 import ProductDetailPage from './Pages/Users/ProductDetailPage';
 import AllProductsPage from './Pages/Users/AllProductsPage';
+import AdminAllOrdersPage from './Pages/Admin/AdminAllOrdersPage';
+
+
 
 
 function App() {
@@ -38,6 +41,7 @@ function App() {
   }, [])
   return (
     <div className="App">
+     
 
       <UserDetails>
         <Router>
@@ -48,10 +52,12 @@ function App() {
             <Route path='/signup' element={<SignupPage />} />
             <Route path='/cart' element={<CartPage />} />
             <Route path='/place-order/:total' element={<PlaceOrderPage />} />
+            <Route path='/place-each-order/:total/:proId' element={<PlaceOrderPage />} />
             <Route path='/view-orders' element={<ViewOrderPage />} />
             <Route path='/view-order-details/:id' element={<ViewOrderDetailPage />} />
             <Route path='/Product-detail/:id' element={<ProductDetailPage />} />
             <Route path='/products' element={<AllProductsPage />} />
+            
 
           </Routes>
         </Router>
@@ -67,6 +73,7 @@ function App() {
             <Route path='home' element={<HomeAdmin/>} />
             <Route path='add-product' element={<AddProducts />} />
             <Route path='edit-product/:id' element={<EditProductPage />} />
+            <Route path='allOrders' element={<AdminAllOrdersPage />} />
             </Route>
 
           </Routes>

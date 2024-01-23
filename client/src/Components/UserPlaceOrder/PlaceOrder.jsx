@@ -5,14 +5,15 @@ import axios from 'axios';
 import { baseUrl } from '../../URL';
 
 function PlaceOrder() {
-    const { total } = useParams();
+    const { total,proId } = useParams();
+    console.log(proId)
     const navigate = useNavigate();
     const [adress, setAdress] = useState('');
     const [pincode, setPincode] = useState(0);
     const [number, setNumber] = useState(0);
     const [paymentMethod, setPaymentMethod] = useState('');
     const handleSubmit = () => {
-        const details = { adress, pincode, number, total, paymentMethod };
+        const details = { adress, pincode, number, total, paymentMethod,proId };
         axios.post(`${baseUrl}/placeOrder`, details,{withCredentials:true}).then((res) => {
             if (res.data.placed) {
                 alert('Order Placed Successfully');

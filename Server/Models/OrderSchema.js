@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 const collection = require('../Collections');
 const ProductModel = require('./ProductSchema');
+const UserModel = require("./UserSchema")
 const OrderSchema = new mongoose.Schema({
 user:{
         type:String,
-        required:true
+        required:true,
     },
     deliveryDetails:{
         adress:{

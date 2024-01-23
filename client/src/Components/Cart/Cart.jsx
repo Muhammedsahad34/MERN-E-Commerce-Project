@@ -84,7 +84,7 @@ function Cart() {
                                                 } {[product.count]} <button className='cart-item-count ml-3' onClick={() => { handleIncDec(product._id, 1) }}>+</button></td>
                                                 <td>{product.price * product.count}</td>
                                                 <td>
-                                                    <button className='btn btn-success'>Buy Item</button>
+                                                    <button className='btn btn-success' onClick={()=>{navigate(`/place-each-order/${product.price}/${product._id}`)}}>Buy Item</button>
                                                     <button className='btn btn-danger ms-3' onClick={() => { handleRemove(product._id,product.count,product.price) }}>Remove</button>
                                                 </td>
                                             </tr>

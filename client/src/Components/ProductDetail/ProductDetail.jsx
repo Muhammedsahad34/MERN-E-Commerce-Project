@@ -5,6 +5,8 @@ import axios from 'axios';
 import {baseUrl} from '../../URL'
 import { UserContext } from '../../Contexts/UserContext';
 import { addtoCart } from '../../Helpers/CartHelper';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 function ProductDetail() {
@@ -27,7 +29,7 @@ function ProductDetail() {
                             <img src={`${baseUrl}/images/product-images/${product.image}`} alt="Logo" className='w-100' />
                         </div>
                         <button className='btn btn-primary cart-btn' onClick={()=>{addtoCart(product._id,navigate,userDetails)}}>Add to Cart</button>
-                        <button className='btn btn-success buy-btn '>Buy now</button>
+                        <button className='btn btn-success buy-btn 'onClick={()=>{navigate(`/place-each-order/${product.price}/${product._id}`)}}>Buy now</button>
                     </div>
                     
                 </div>
@@ -37,6 +39,8 @@ function ProductDetail() {
                     <p className='description ms-5'>{product ? product.description : ""}</p>
                 </div>
             </div>
+            
+            
         </div>
     )
 }

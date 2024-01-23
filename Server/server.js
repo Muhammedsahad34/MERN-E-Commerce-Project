@@ -281,40 +281,78 @@ app.get('/removeFromCart/:id',async(req,res)=>{
 
 app.post('/placeOrder',async(req,res)=>{
   const {adress,pincode,number,total,paymentMethod} = req.body;
+  const {proId} = req.body;
   const status = paymentMethod === 'COD' ? 'Placed':'Pending';
   const userId = req.session.user._id;
-  const cart = await CartModel.findOne({user:userId});
-  const products = cart.products;
-  const order = {
-    user:userId,
-    deliveryDetails:{
-      adress,
-      pincode,
-      number
-    },
-    products,
-    total,
-    paymentMethod,
-    status,
-    date: new Date(),
-  }
-  newOrder = new OrderModel(order);
-  newOrder.save().then(async(response)=>{
-    if(response.status === 'Placed'){
-      
-      res.json({data:response,placed:true})
-    }else{
-      instance.orders.create({
-        amount: total * 100,
-        currency: "INR",
-        receipt: response._id,
-      },function (err,order){
-        res.json(order)
-      })
+  if(proId === undefined){
+    const cart = await CartModel.findOne({user:userId});
+    const products = cart.products;
+    const order = {
+      user:userId,
+      deliveryDetails:{
+        adress,
+        pincode,
+        number
+      },
+      products,
+      total,
+      paymentMethod,
+      status,
+      date: new Date(),
     }
-    await CartModel.findOneAndRemove({user:userId})
-  }).catch((err)=>console.log(err));
-
+    const newOrder = new OrderModel(order);
+    newOrder.save().then(async(response)=>{
+      if(response.status === 'Placed'){
+        
+        res.json({data:response,placed:true})
+      }else{
+        instance.orders.create({
+          amount: total * 100,
+          currency: "INR",
+          receipt: response._id,
+        },function (err,order){
+          res.json(order)
+        })
+      }
+      await CartModel.findOneAndRemove({user:userId})
+    }).catch((err)=>console.log(err));
+  }else{
+    const pro = await ProductModel.findById(proId);
+    const price = pro.price;
+    const count = Math.floor(total / price);
+    const order = {
+      user:userId,
+      deliveryDetails:{
+        adress,
+        pincode,
+        number
+      },
+      products:{
+        item:proId,
+        count
+      },
+      total,
+      paymentMethod,
+      status,
+      date: new Date(),
+    }
+    const newOrder = new OrderModel(order);
+    newOrder.save().then((response) => {
+      if(response.status === 'Placed'){
+        res.json({data:response,placed:true})
+      }else{
+        instance.orders.create({
+          amount: total * 100,
+          currency: "INR",
+          receipt: response._id,
+        },function (err,order){
+          res.json(order)
+        })
+      }
+    })
+   
+  }
+  
 });
 
 app.get('/fetchOrderDetails',async(req,res)=>{
@@ -452,6 +490,11 @@ app.get('/eachProduct/:id', async(req,res) => {
 
   }
   
+});
+app.get('/admin/allOrders',async(req,res) => {
+  const allOrders = await OrderModel.find({});
+  res.json(allOrders);
+
 })
 
 app.listen(PORT, () => {

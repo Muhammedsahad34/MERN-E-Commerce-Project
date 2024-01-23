@@ -11,16 +11,15 @@ function Header() {
     const [isOpen, setIsOpen] = useState(false);
     const isMounted = useRef(true);
     const navigate = useNavigate();
-    console.log(userDetails)
     useEffect(() => {
         if (isMounted.current) {
             isMounted.current = false
         } else {
             axios.get(`${baseUrl}/getprofile`, { withCredentials: true }).then((res) => {
-                setUserDetails(res.data)
-                console.log(res.data)
+                setUserDetails(res.data);
+                
             }).catch((err) => {
-                console.log(err);
+                alert(err);
             })
         }
     }, [])
