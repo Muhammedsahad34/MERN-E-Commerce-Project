@@ -19,6 +19,7 @@ import PrivateRoutes from './Components/PrivateRoutes/PrivateRoutes';
 import ProductDetailPage from './Pages/Users/ProductDetailPage';
 import AllProductsPage from './Pages/Users/AllProductsPage';
 import AdminAllOrdersPage from './Pages/Admin/AdminAllOrdersPage';
+import ViewOrderDetails from './Pages/Admin/ViewOrderDetails';
 
 
 
@@ -73,7 +74,8 @@ function App() {
             <Route path='home' element={<HomeAdmin/>} />
             <Route path='add-product' element={<AddProducts />} />
             <Route path='edit-product/:id' element={<EditProductPage />} />
-            <Route path='allOrders' element={<AdminAllOrdersPage />} />
+            <Route path='allOrders/:subpage?' element={<AdminAllOrdersPage />} />
+            <Route path='viewOrder/:id' element={<ViewOrderDetails/>} />
             </Route>
 
           </Routes>

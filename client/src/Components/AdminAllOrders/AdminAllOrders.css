@@ -2,35 +2,17 @@
     margin-top: 4rem;
 }
 
-.table-container {
-    overflow-x: auto;
-   
-}
 
-.table-container table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
+.status-links{
+    gap:2rem;
 }
-
-.t-row-1 th,
-td {
-    padding: 12px;
-    text-align: left;
-    border: 1px solid black;
-    
+.status-links a{
+    text-decoration: none;
 }
-
-.t-row-1 th {
-    background-color: #e47d7d;
+.status-links div{
+    border-right: 1px solid black;
+    padding: 0 2rem;
 }
-
-.t-row-1{
-    border: 1px solid black;
-}
-.row-2:hover{
-   box-shadow: 5px 5px 5px black;
-}
-.row-2 td{
-    border: 1px solid rgb(27, 25, 25);
+.status-links div:nth-last-child(1){
+    border: none;
 }

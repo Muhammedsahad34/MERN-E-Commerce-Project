@@ -13,6 +13,7 @@ const OrderModel = require('./Models/OrderSchema');
 const crypto = require('crypto');
 const Razorpay = require('razorpay');
 const AdminModel = require('./Models/AdminSchema');
+const fetchOrderDetails = require('./Helpers/OrderDetailHelper');
 var instance = new Razorpay({
   key_id: 'rzp_test_TNgeRWAxCwvh66',
   key_secret: 'DcbcNNS0AJWuGrzwGVKsXjKD',
@@ -113,7 +114,7 @@ app.post('/login',async (req,res)=>{
       if(ispass === true){
         req.session.loggedIn = true;
         req.session.user = user[0];
-        // console.log(req.session.user);
+        
         res.json({status:'true'})
       }else{
         res.json('false')
@@ -206,10 +207,12 @@ app.get('/addToCart/:id', async(req,res)=>{
 });
 
 app.get('/fetchCart',async(req,res)=>{
-  userId = req.session.user._id;
+  const userId = req.session.user._id;
+  const objid = new mongoose.Types.ObjectId(userId);
+  // console.log(objid)
   const productsInCart = await CartModel.aggregate([
     {
-      $match:{user:userId}
+      $match:{user:objid}
     },
     {
       $unwind:'$products'
@@ -236,7 +239,8 @@ app.get('/fetchCart',async(req,res)=>{
 
       }
     }
-  ])
+  ]);
+  
   let totalPrice = 0;
     productsInCart.forEach(element => {
       totalPrice = totalPrice + element.count * element.price
@@ -356,8 +360,9 @@ app.post('/placeOrder',async(req,res)=>{
 });
 
 app.get('/fetchOrderDetails',async(req,res)=>{
-  userId = req.session.user._id;
-  const orderDetails = await OrderModel.find({user:userId});
+  const userId = req.session.user._id;
+  const objid = new mongoose.Types.ObjectId(userId)
+  const orderDetails = await OrderModel.find({user:objid});
   res.json( orderDetails);
 });
 
@@ -379,69 +384,7 @@ app.post('/savePayment',async(req,res)=>{
 
 app.get('/fetchEachOrder/:id',async(req,res)=>{
   const orderId = req.params.id;
-  const orderDetails = await OrderModel.aggregate([
-    
-      {
-        $match: { _id: new mongoose.Types.ObjectId(orderId)}
-      },
-      {
-        $unwind:"$products"
-      },
-      {
-        $lookup:{
-          from:"products",
-          localField:"products.item",
-          foreignField:"_id",
-          as:"productDetails"
-        }
-      },
-      {
-        $unwind:"$productDetails"
-      },
-      {
-        $project: {
-          _id: 1,
-          user: 1,
-          deliveryDetails: 1,
-          total: 1,
-          paymentMethod: 1,
-          status: 1,
-          date: 1,
-          __v: 1,
-          productDetails: 1
-        }
-      },
-      {
-        $group: {
-          _id: {
-            _id: "$_id",
-            user: "$user",
-            deliveryDetails: "$deliveryDetails",
-            total: "$total",
-            paymentMethod: "$paymentMethod",
-            status: "$status",
-            date: "$date",
-            __v: "$__v",
-          },
-          productDetails: { $push: "$productDetails" }
-        }
-      },
-      {
-        $project: {
-          _id: "$_id._id",
-          user: "$_id.user",
-          deliveryDetails: "$_id.deliveryDetails",
-          total: "$_id.total",
-          paymentMethod: "$_id.paymentMethod",
-          status: "$_id.status",
-          date: "$_id.date",
-          __v: "$_id.__v",
-          productDetails: 1
-        }
-      }
-      
-      
-    ]);
+  const orderDetails = await fetchOrderDetails(orderId);
   
   
   res.json(orderDetails);
@@ -491,10 +434,32 @@ app.get('/eachProduct/:id', async(req,res) => {
   }
   
 });
-app.get('/admin/allOrders',async(req,res) => {
-  const allOrders = await OrderModel.find({});
+app.get('/admin/allOrders/:subpage',async(req,res) => {
+  const {subpage} = req.params;
+  const status = subpage === undefined ? 'Placed':subpage === 'ShippedOrders' ? "Shipped":subpage === 'DeliverdOrders' ? 'Delivered':'Placed';
+  const allOrders = await OrderModel.find({status});
   res.json(allOrders);
 
+});
+app.get('/admin/viewEachOrder/:id',async(req,res)=>{
+  const orderId = req.params.id;
+  const orderDetails = await fetchOrderDetails(orderId);
+  const userDetails = await UserModel.find({user:orderDetails.user})
+  res.json({data:orderDetails,user:userDetails});
+
+});
+app.get('/admin/changeStatus/:id',async(req,res) => {
+  const orderId = req.params.id;
+  const orderDetails = await OrderModel.find({_id:orderId});
+  if(orderDetails[0].status=== 'Placed'){
+    await OrderModel.findByIdAndUpdate(orderId,{status:'Shipped'},{new:true}).then((response)=>{
+      res.json(true)
+    })
+  }else if(orderDetails[0].status === 'Shipped'){
+    await OrderModel.findByIdAndUpdate(orderId,{status:'Delivered'},{new:true}).then((response)=>{
+      res.json(true)
+    })
+  }
 })
 
 app.listen(PORT, () => {

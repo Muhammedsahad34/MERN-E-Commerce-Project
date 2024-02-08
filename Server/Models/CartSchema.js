@@ -4,7 +4,8 @@ const ProductModel = require('./ProductSchema');
 const UserModel = require('./UserSchema');
 const CartSchema = new mongoose.Schema({
     user:{
-        type:String,
+        type:mongoose.Schema.ObjectId,
+        ref: UserModel,
         required:true
         
     },
